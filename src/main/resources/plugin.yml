@@ -1,0 +1,4 @@
+name: Islnad-MultiProfiles
+version: '1.0-SNAPSHOT'
+main: com.nano.islnadMultiProfiles.IslnadMultiProfiles
+api-version: '1.21'
