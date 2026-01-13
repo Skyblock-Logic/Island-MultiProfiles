@@ -1,4 +1,4 @@
-package com.nano.islnadMultiProfiles.entity.player;
+package com.nano.islandMultiProfiles.entity.player;
 
 import java.util.UUID;
 
