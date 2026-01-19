@@ -13,25 +13,25 @@ import com.bgsoftware.superiorskyblock.api.commands.SuperiorCommand;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.nano.islandMultiProfiles.util.factory.IslandFactory;
 
-public class IMCmdCreate implements SuperiorCommand {
+public class IMCmdSubIslandCreate implements SuperiorCommand {
 	@Override
 	public List<String> getAliases() {
-		return List.of("m_create");
+		return List.of("subcreate");
 	}
 
 	@Override
 	public String getPermission() {
-		return "";
+		return "superior.subisland.create";
 	}
 
 	@Override
 	public String getUsage(Locale locale) {
-		return "m_create <island-name> <slot> <schematic>";
+		return "subcreate <island-name> <slot> <schematic>";
 	}
 
 	@Override
 	public String getDescription(Locale locale) {
-		return "<slot> 번호의 섬을 생성합니다.";
+		return "<slot> 번호의 서브섬을 생성합니다.";
 	}
 
 	@Override
