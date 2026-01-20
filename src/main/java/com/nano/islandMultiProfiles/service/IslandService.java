@@ -52,10 +52,7 @@ public class IslandService {
 	 * @note 서브섬으로 이동하는 메서드 입니다.
 	 */
 	public void move(Player player, int slot){
-		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(player.getUniqueId()), slot);
-		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
-
-		Island island = SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
+		Island island = getFakeIsland(player, slot);
 		player.teleport(island.getCenterPosition().toLocation(getWorld("SuperiorWorld")));
 	}
 
@@ -73,10 +70,10 @@ public class IslandService {
 		}
 
 		Bukkit.getAsyncScheduler().runNow(plugin, task -> {
-			UUID[] islandUuids = new UUID[MAX_ISLAND_SLOT + 1];
+			Island[] islandUuids = new Island[MAX_ISLAND_SLOT + 1];
 			for (int i = 1; i <= MAX_ISLAND_SLOT; i++) {
-				UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(ownerUuid, i);
-				islandUuids[i] = FakeIslandUUIdPolicy.issue(fakePlayerUUID, i);
+				Island subIsland = getFakeIsland(ownerUuid, i);
+				islandUuids[i] = subIsland;
 			}
 
 			Bukkit.getScheduler().runTask(plugin, () -> {
@@ -85,7 +82,7 @@ public class IslandService {
 		});
 	}
 
-	private void applyFlagsChunked(UUID[] islandUuids, boolean[] enabled) {
+	private void applyFlagsChunked(Island[] islandUuids, boolean[] enabled) {
 		final int islandsPerTick = 1;
 
 		final IslandFlag[] flags = IslandFlag.values().toArray(new IslandFlag[0]);
@@ -95,8 +92,7 @@ public class IslandService {
 			int processed = 0;
 
 			while (index[0] <= MAX_ISLAND_SLOT && processed < islandsPerTick) {
-				UUID islandUUID = islandUuids[index[0]++];
-				Island subIsland = SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
+				Island subIsland = islandUuids[index[0]++];
 				if (subIsland == null) continue;
 
 				for (IslandFlag flag : flags) {
@@ -115,5 +111,16 @@ public class IslandService {
 				task.cancel();
 			}
 		}, 1L, 1L);
+	}
+
+	private Island getFakeIsland(Player player, int slot){
+		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(player.getUniqueId()), slot);
+		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
+		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
+	}
+	private Island getFakeIsland(UUID playerUUID, int slot){
+		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID), slot);
+		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
+		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
 	}
 }
