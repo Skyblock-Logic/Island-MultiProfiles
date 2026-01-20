@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.commands.SuperiorCommand;
+import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.nano.islandMultiProfiles.util.factory.IslandFactory;
 
@@ -26,12 +27,12 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 
 	@Override
 	public String getUsage(Locale locale) {
-		return "subcreate <island-name> <slot> <schematic>";
+		return "subcreate <player> <slot>";
 	}
 
 	@Override
 	public String getDescription(Locale locale) {
-		return "<slot> 번호의 서브섬을 생성합니다.";
+		return "<player> 명의로 된 <slot> 번호의 서브섬을 생성합니다.";
 	}
 
 	@Override
@@ -61,13 +62,12 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 			return;
 		}
 
-		String islandName = args[1];
+		Island ownerIsland = SuperiorSkyblockAPI.getIslandByUUID(player.getUniqueId());
+		String islandName = ownerIsland.getName();
+		String schematic = ownerIsland.getSchematicName();
 		int slot = Integer.parseInt(args[2]);
-		String schematicName = args.length > 3 ? args[3] : "desert";
 
-		player.sendMessage("§a섬 생성을 시작합니다...");
-
-		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematicName)
+		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematic)
 			.thenAccept(result -> {
 				if (result.getStatus() == IslandCreationAlgorithm.IslandCreationResult.Status.SUCCESS) {
 					player.sendMessage("§b섬 생성 완료: §f" + result.getIsland().getName());
