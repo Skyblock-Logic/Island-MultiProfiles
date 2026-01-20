@@ -1,6 +1,5 @@
 package com.nano.islandMultiProfiles.infra.command;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -9,36 +8,36 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
-import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.commands.SuperiorCommand;
 import com.nano.islandMultiProfiles.exception.IslandException;
 import com.nano.islandMultiProfiles.service.IslandService;
 
-public class IMCmdSubIslandCreate implements SuperiorCommand {
+public class IMCmdTeleport implements SuperiorCommand {
+
 	private final IslandService islandService;
 
-	public IMCmdSubIslandCreate(IslandService islandService) {
+	public IMCmdTeleport(IslandService islandService) {
 		this.islandService = islandService;
 	}
 
 	@Override
 	public List<String> getAliases() {
-		return List.of("subcreate");
+		return List.of("move");
 	}
 
 	@Override
 	public String getPermission() {
-		return "superior.subisland.create";
+		return "";
 	}
 
 	@Override
 	public String getUsage(Locale locale) {
-		return "subcreate <player> <slot>";
+		return "move <player> <slot>";
 	}
 
 	@Override
 	public String getDescription(Locale locale) {
-		return "<player> 명의로 된 <slot> 번호의 서브섬을 생성합니다.";
+		return "<player> 의 <slot> 섬으로 이동 합니다.";
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 
 	@Override
 	public int getMaxArgs() {
-		return 4;
+		return 3;
 	}
 
 	@Override
@@ -83,24 +82,21 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 		}
 
 		try {
-			islandService.create(target,slot);
+			islandService.move(player, slot);
 		} catch (IslandException e) {
 			player.sendMessage(e.getMessage());
 		}
 	}
 
+
 	@Override
 	public List<String> tabComplete(SuperiorSkyblock superiorSkyblock, CommandSender commandSender, String[] args) {
 		if (args.length == 2) {
-			return List.of("<섬이름>");
+			return List.of("<player>");
 		}
 
 		if (args.length == 3) {
 			return List.of("1", "2", "3");
-		}
-
-		if (args.length == 4) {
-			return new ArrayList<>(SuperiorSkyblockAPI.getSchematics().getSchematics());
 		}
 
 		return List.of();
