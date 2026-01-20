@@ -113,6 +113,22 @@ public class IslandService {
 		}, 1L, 1L);
 	}
 
+	/**
+	 * @param island 메인 섬 입니다.
+	 * @note 메인 섬에 알바생이 추가/제거되면 서브섬에도 메인과 같은 알바생이 추가/제거되는 로직 입니다.
+	 */
+	public void updateCoopToSubIsland(Island island){
+		UUID ownerUuid = Objects.requireNonNull(island.getOwner().getUniqueId());
+		for ( int i = 1; i <= MAX_ISLAND_SLOT; i++ ) {
+			Island subIsland = getFakeIsland(ownerUuid, i);
+			subIsland.getCoopPlayers().clear();
+			island.getCoopPlayers().forEach(subIsland::addCoop);
+		}
+	}
+
+	/**
+	 * @note 가짜 섬의 정보를 가져오는 로직 입니다.
+	 */
 	private Island getFakeIsland(Player player, int slot){
 		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(player.getUniqueId()), slot);
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);

@@ -3,6 +3,7 @@ package com.nano.islandMultiProfiles.listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import com.bgsoftware.superiorskyblock.api.events.IslandCoopPlayerEvent;
 import com.bgsoftware.superiorskyblock.api.events.IslandDisableFlagEvent;
 import com.bgsoftware.superiorskyblock.api.events.IslandEnableFlagEvent;
 import com.nano.islandMultiProfiles.service.IslandService;
@@ -15,9 +16,6 @@ public class IslandUpdateListener implements Listener {
 		this.islandService = islandService;
 	}
 
-	/**
-	 *
-	 */
 	@EventHandler
 	public void enable(IslandEnableFlagEvent event){
 		islandService.update(event.getIsland());
@@ -26,5 +24,9 @@ public class IslandUpdateListener implements Listener {
 	@EventHandler
 	public void disable(IslandDisableFlagEvent event){
 		islandService.update(event.getIsland());
+	}
+	@EventHandler
+	public void coop(IslandCoopPlayerEvent event){
+		islandService.updateCoopToSubIsland(event.getIsland());
 	}
 }
