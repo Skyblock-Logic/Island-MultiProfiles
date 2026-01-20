@@ -12,8 +12,8 @@ import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockPosition;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.nano.islandMultiProfiles.infra.identity.policy.FakeIslandUUIdPolicy;
-import com.nano.islandMultiProfiles.infra.identity.policy.FakePlayerUUIDPolicy;
+import com.nano.islandMultiProfiles.dbcore.policy.FakeIslandUUIdPolicy;
+import com.nano.islandMultiProfiles.dbcore.policy.FakePlayerUUIDPolicy;
 
 public final class IslandFactory {
 	private IslandFactory() {}
@@ -21,8 +21,12 @@ public final class IslandFactory {
 	/**
 	 * 가짜 UUID 정책을 기반으로 새로운 섬을 생성합니다.
 	 */
-	public static CompletableFuture<IslandCreationAlgorithm.IslandCreationResult> createMultiProfileIsland(Player player, String islandName, int slot, String schematicName) {
-
+	public static CompletableFuture<IslandCreationAlgorithm.IslandCreationResult> createMultiProfileIsland(
+		Player player,
+		String islandName,
+		int slot,
+		String schematicName
+	) {
 		SuperiorPlayer owner = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
 
 		// 1. UUID 및 가짜 플레이어 설정
