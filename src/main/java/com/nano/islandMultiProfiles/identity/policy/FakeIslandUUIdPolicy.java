@@ -1,4 +1,4 @@
-package com.nano.islandMultiProfiles.infra.identity.policy;
+package com.nano.islandMultiProfiles.identity.policy;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;

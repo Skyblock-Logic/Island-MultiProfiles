@@ -12,8 +12,8 @@ import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockPosition;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.nano.islandMultiProfiles.dbcore.policy.FakeIslandUUIdPolicy;
-import com.nano.islandMultiProfiles.dbcore.policy.FakePlayerUUIDPolicy;
+import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
+import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
 
 public final class IslandFactory {
 	private IslandFactory() {}

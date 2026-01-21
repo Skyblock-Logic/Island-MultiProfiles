@@ -1,9 +1,9 @@
-package com.nano.islandMultiProfiles.infra.identity.matcher;
+package com.nano.islandMultiProfiles.identity.matcher;
 
 import java.util.OptionalInt;
 import java.util.UUID;
 
-import com.nano.islandMultiProfiles.infra.identity.policy.FakeIslandUUIdPolicy;
+import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
 
 public final class FakeIslandUUIDMatcher {
 	private FakeIslandUUIDMatcher() {}

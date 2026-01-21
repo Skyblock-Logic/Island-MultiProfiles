@@ -14,8 +14,8 @@ import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.nano.islandMultiProfiles.IslandMultiProfiles;
-import com.nano.islandMultiProfiles.dbcore.policy.FakeIslandUUIdPolicy;
-import com.nano.islandMultiProfiles.dbcore.policy.FakePlayerUUIDPolicy;
+import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
+import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
 import com.nano.islandMultiProfiles.util.factory.IslandFactory;
 
 public class IslandService {

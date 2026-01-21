@@ -92,7 +92,7 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 	@Override
 	public List<String> tabComplete(SuperiorSkyblock superiorSkyblock, CommandSender commandSender, String[] args) {
 		if (args.length == 2) {
-			return List.of("<섬이름>");
+			return List.of("<player>");
 		}
 
 		if (args.length == 3) {
