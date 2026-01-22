@@ -92,7 +92,7 @@ public class IMCmdTeleport implements SuperiorCommand {
 	@Override
 	public List<String> tabComplete(SuperiorSkyblock superiorSkyblock, CommandSender commandSender, String[] args) {
 		if (args.length == 2) {
-			return List.of("<player>");
+			return List.of(commandSender.getName());
 		}
 
 		if (args.length == 3) {

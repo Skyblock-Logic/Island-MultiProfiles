@@ -82,11 +82,13 @@ public class IMCmdIslandCreate implements SuperiorCommand {
 			return;
 		}
 
-		String islandName = args[3];
-
 		try {
-			if ( slot == 1 ) islandService.createMainIsland(target,islandName);
-			else if ( slot > 1 ) islandService.createSubIsland(target,slot);
+			if ( slot == 1 ) {
+				islandService.createMainIsland(target,args[3]);
+			}
+			else if ( slot > 1 ) {
+				islandService.createSubIsland(target,slot);
+			}
 		} catch (IslandException e) {
 			player.sendMessage(e.getMessage());
 		}
@@ -95,7 +97,7 @@ public class IMCmdIslandCreate implements SuperiorCommand {
 	@Override
 	public List<String> tabComplete(SuperiorSkyblock superiorSkyblock, CommandSender commandSender, String[] args) {
 		if (args.length == 2) {
-			return List.of("<player>");
+			return List.of(commandSender.getName());
 		}
 
 		if (args.length == 3) {
