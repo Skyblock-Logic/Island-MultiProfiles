@@ -38,6 +38,8 @@ public final class IslandFactory {
 		BlockPosition position = SuperiorSkyblockAPI.getGrid().getLastIslandPosition();
 		Schematic schematic = SuperiorSkyblockAPI.getSchematic(schematicName == null ? "desert" : schematicName);
 
+		islandName = slot == 1 ? islandName : islandName + "_" + slot;
+
 		// 3. 섬 생성 알고리즘 실행
 		return SuperiorSkyblockAPI.getGrid()
 			.getIslandCreationAlgorithm()

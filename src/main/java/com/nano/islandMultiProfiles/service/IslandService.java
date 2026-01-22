@@ -20,23 +20,39 @@ import com.nano.islandMultiProfiles.util.factory.IslandFactory;
 
 public class IslandService {
 	private final IslandMultiProfiles plugin;
-	private final int MAX_ISLAND_SLOT = 2;
+	private final int MAX_ISLAND_SLOT = 3;
 
 	public IslandService(IslandMultiProfiles plugin) {
 		this.plugin = plugin;
 	}
 
 	/**
+	 * @param owner 해당 땅의 실 주인 입니다.
+	 * @note 메인 섬 생성메서드 입니다.
+	 */
+	public void createMainIsland(Player owner, String islandName){
+		String defaultSchematic = "desert";
+		create(owner, islandName, defaultSchematic, 1);
+	}
+
+	/**
 	 * @param player 해당 땅의 실 주인 입니다.
-	 * @param slot 서브섬 번호입니다.
+	 * @param slot 서브섬 번호입니다. ( 1번은 메인섬 입니다. ) ( 2 ~
 	 * @note 서브 섬 생성 메서드 입니다.
 	 */
-	public void create(Player player, int slot){
-		Island ownerIsland = SuperiorSkyblockAPI.getIslandByUUID(player.getUniqueId());
+	public void createSubIsland(Player player, int slot){
+		Island ownerIsland = getFakeIsland(player, 1);
+		if ( ownerIsland == null ){
+			player.sendMessage(" 1번섬이 생성되지 않았습니다. 1번섬을 생성해주세요. ");
+			return;
+		}
+		String defaultSchematic = ownerIsland.getSchematicName();
 		String islandName = ownerIsland.getName();
-		String schematic = ownerIsland.getSchematicName();
+		create(player, islandName, defaultSchematic, slot);
+	}
 
-		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematic)
+	public void create(Player player, String islandName, String schematicName, int slot){
+		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematicName)
 			.thenAccept(result -> {
 				if (result.getStatus() == IslandCreationAlgorithm.IslandCreationResult.Status.SUCCESS) {
 					player.sendMessage("§b섬 생성 완료: §f" + result.getIsland().getName());

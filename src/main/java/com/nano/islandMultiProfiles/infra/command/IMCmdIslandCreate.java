@@ -14,10 +14,10 @@ import com.bgsoftware.superiorskyblock.api.commands.SuperiorCommand;
 import com.nano.islandMultiProfiles.exception.IslandException;
 import com.nano.islandMultiProfiles.service.IslandService;
 
-public class IMCmdSubIslandCreate implements SuperiorCommand {
+public class IMCmdIslandCreate implements SuperiorCommand {
 	private final IslandService islandService;
 
-	public IMCmdSubIslandCreate(IslandService islandService) {
+	public IMCmdIslandCreate(IslandService islandService) {
 		this.islandService = islandService;
 	}
 
@@ -28,17 +28,17 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 
 	@Override
 	public String getPermission() {
-		return "superior.subisland.create";
+		return "superior.island.create";
 	}
 
 	@Override
 	public String getUsage(Locale locale) {
-		return "subcreate <player> <slot>";
+		return "subcreate <player> <slot> <name>";
 	}
 
 	@Override
 	public String getDescription(Locale locale) {
-		return "<player> 명의로 된 <slot> 번호의 서브섬을 생성합니다.";
+		return "<player> 명의로 된 <slot> 번호의 섬을 생성합니다.";
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 
 	@Override
 	public int getMaxArgs() {
-		return 4;
+		return 5;
 	}
 
 	@Override
@@ -82,8 +82,11 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 			return;
 		}
 
+		String islandName = args[3];
+
 		try {
-			islandService.create(target,slot);
+			if ( slot == 1 ) islandService.createMainIsland(target,islandName);
+			else if ( slot > 1 ) islandService.createSubIsland(target,slot);
 		} catch (IslandException e) {
 			player.sendMessage(e.getMessage());
 		}
@@ -98,8 +101,13 @@ public class IMCmdSubIslandCreate implements SuperiorCommand {
 		if (args.length == 3) {
 			return List.of("1", "2", "3");
 		}
+		if(  args[2].equals("1") ) {
+			if (args.length == 4) {
+				return List.of("<name>");
+			}
+		}
 
-		if (args.length == 4) {
+		if (args.length == 5) {
 			return new ArrayList<>(SuperiorSkyblockAPI.getSchematics().getSchematics());
 		}
 
