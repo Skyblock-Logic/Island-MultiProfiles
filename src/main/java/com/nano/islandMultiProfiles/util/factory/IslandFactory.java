@@ -7,13 +7,13 @@ import org.bukkit.entity.Player;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockPosition;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
 import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
+import com.nano.islandMultiProfiles.identity.policy.IslandNamePolicy;
 
 public final class IslandFactory {
 	private IslandFactory() {}
@@ -25,9 +25,10 @@ public final class IslandFactory {
 		Player player,
 		String islandName,
 		int slot,
-		String schematicName
+		String schematicName,
+		boolean isOwner
 	) {
-		SuperiorPlayer owner = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+		SuperiorPlayer ow = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
 
 		// 1. UUID 및 가짜 플레이어 설정
 		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(player.getUniqueId(), slot);
@@ -38,7 +39,7 @@ public final class IslandFactory {
 		BlockPosition position = SuperiorSkyblockAPI.getGrid().getLastIslandPosition();
 		Schematic schematic = SuperiorSkyblockAPI.getSchematic(schematicName == null ? "desert" : schematicName);
 
-		islandName = slot == 1 ? islandName : islandName + "_" + slot;
+		islandName = slot == 1 ? islandName : IslandNamePolicy.encode(islandName,slot);
 
 		// 3. 섬 생성 알고리즘 실행
 		return SuperiorSkyblockAPI.getGrid()
@@ -47,15 +48,14 @@ public final class IslandFactory {
 			.thenApply(result -> {
 				if (result.getStatus() == IslandCreationAlgorithm.IslandCreationResult.Status.SUCCESS) {
 					Island island = result.getIsland();
-
-					// 4. 추가 설정 (관리 권한 부여 및 그리드 등록)
-					PlayerRole role = SuperiorSkyblockAPI.getRoles().getPlayerRole("ADMIN");
-					island.addMember(owner, role);
-
 					SuperiorSkyblockAPI
 						.getGrid()
 						.getIslandsContainer()
 						.addIsland(island);
+
+					if (isOwner){
+						island.addMember(ow, SuperiorSkyblockAPI.getRoles().getPlayerRole("ADMIN"));
+					}
 				}
 				return result;
 			});

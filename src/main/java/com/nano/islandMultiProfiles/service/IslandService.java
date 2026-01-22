@@ -11,11 +11,13 @@ import org.bukkit.entity.Player;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
+import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.nano.islandMultiProfiles.IslandMultiProfiles;
 import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
 import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
+import com.nano.islandMultiProfiles.identity.policy.IslandNamePolicy;
 import com.nano.islandMultiProfiles.util.factory.IslandFactory;
 
 public class IslandService {
@@ -52,7 +54,7 @@ public class IslandService {
 	}
 
 	public void create(Player player, String islandName, String schematicName, int slot){
-		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematicName)
+		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematicName,true)
 			.thenAccept(result -> {
 				if (result.getStatus() == IslandCreationAlgorithm.IslandCreationResult.Status.SUCCESS) {
 					player.sendMessage("§b섬 생성 완료: §f" + result.getIsland().getName());
@@ -69,7 +71,26 @@ public class IslandService {
 	 */
 	public void move(Player player, int slot){
 		Island island = getFakeIsland(player, slot);
+		switchMember(player, slot);
 		player.teleport(island.getCenterPosition().toLocation(getWorld("SuperiorWorld")));
+	}
+
+	/**
+	 * @param player 권한을 업데이트 하려는 대상 입니다.
+	 * @param slot ( 2~ ) 번째 서브섬 번호 입니다.
+	 */
+	public void switchMember(Player player, int slot){
+		SuperiorPlayer target = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+
+		PlayerRole role = target.getPlayerRole();
+		Island island = target.getIsland();
+
+		String islandName = IslandNamePolicy.decode(island.getName());
+		Island toIsland = SuperiorSkyblockAPI.getIsland(IslandNamePolicy.encode(islandName, slot));
+
+		toIsland.addMember(target, role);
+		target.setIsland(toIsland);
+		target.setPlayerRole(role);
 	}
 
 	/**
