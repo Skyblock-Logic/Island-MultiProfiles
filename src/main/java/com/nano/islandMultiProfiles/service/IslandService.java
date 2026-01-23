@@ -164,6 +164,23 @@ public class IslandService {
 	}
 
 	/**
+	 * @param player 섬 주인 ( 섬 주인이 아닌 경우 이름변경 불가 ) or 오피
+	 * @param newName 새로운 이름 ( 중복 X )
+	 */
+	public void rename(Player player, String newName) {
+		Island island = getFakeIsland(player, 1);
+		if ( island != null ){
+			island.setName(newName);
+
+			Island subIsland1 = getFakeIsland(player, 2);
+			Island subIsland2 = getFakeIsland(player, 3);
+			subIsland1.setName(IslandNamePolicy.encode(newName, 2));
+			subIsland2.setName(IslandNamePolicy.encode(newName, 3));
+		}
+	}
+
+
+	/**
 	 * @note 가짜 섬의 정보를 가져오는 로직 입니다.
 	 */
 	private Island getFakeIsland(Player player, int slot){
