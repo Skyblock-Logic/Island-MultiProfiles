@@ -174,8 +174,8 @@ public class IslandService {
 
 			Island subIsland1 = getFakeIsland(player, 2);
 			Island subIsland2 = getFakeIsland(player, 3);
-			subIsland1.setName(IslandNamePolicy.encode(newName, 2));
-			subIsland2.setName(IslandNamePolicy.encode(newName, 3));
+			if ( subIsland1 !=null ) subIsland1.setName(IslandNamePolicy.encode(newName, 2));
+			if ( subIsland2 !=null ) subIsland2.setName(IslandNamePolicy.encode(newName, 3));
 		}
 	}
 
