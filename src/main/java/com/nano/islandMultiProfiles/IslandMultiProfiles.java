@@ -3,7 +3,9 @@ package com.nano.islandMultiProfiles;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
+import com.nano.islandMultiProfiles.infra.command.IMCmdIslandAccept;
 import com.nano.islandMultiProfiles.infra.command.IMCmdIslandCreate;
+import com.nano.islandMultiProfiles.infra.command.IMCmdIslandInvite;
 import com.nano.islandMultiProfiles.infra.command.IMCmdRename;
 import com.nano.islandMultiProfiles.infra.command.IMCmdTeleport;
 import com.nano.islandMultiProfiles.listener.IslandUpdateListener;
@@ -24,6 +26,8 @@ public final class IslandMultiProfiles extends JavaPlugin {
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandCreate(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdTeleport(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdRename(islandService));
+        SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandInvite(islandService));
+        SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandAccept(islandService));
     }
 
     private void onEvent(){

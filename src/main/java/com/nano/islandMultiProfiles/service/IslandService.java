@@ -15,6 +15,7 @@ import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.nano.islandMultiProfiles.IslandMultiProfiles;
+import com.nano.islandMultiProfiles.api.MultiProfileAPI;
 import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
 import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
 import com.nano.islandMultiProfiles.identity.policy.IslandNamePolicy;
@@ -192,5 +193,35 @@ public class IslandService {
 		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID), slot);
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
 		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
+	}
+
+	/**
+	 * @param sender 섬 초대장을 보내는 사람 입니다. ( 섬 주인 )
+	 * @param target 섬 초대장을 받는 사람 입니다.
+	 * @note 섬 초대장을 발송하면 캐시에 등록하고 30초 뒤 자동으로 초대장이 만료되는 메서드 입니다.
+	 */
+	public void invitePlayer(Player sender, Player target) {
+		MultiProfileAPI.getInstance()
+			.getCache()
+			.put(target, getFakeIsland(sender, 1));
+
+		target.sendMessage(" 섬 초대 완 30초 이내 수락 ㄱ ");
+	}
+
+	/**
+	 * @param player 섬 초대장을 수락/거절 하는 플레이어 입니다.
+	 */
+	public void acceptInvite(Player player, boolean accept) {
+		Island island = MultiProfileAPI.getInstance()
+			.getCache()
+			.get(player);
+
+		if ( accept ){
+			SuperiorPlayer sp =  SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+			PlayerRole role = SuperiorSkyblockAPI.getRoles().getPlayerRole("Member");
+			island.addMember(sp, role);
+			sp.setIsland(island);
+			sp.setPlayerRole(role);
+		}
 	}
 }
