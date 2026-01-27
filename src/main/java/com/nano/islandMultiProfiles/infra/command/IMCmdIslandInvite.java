@@ -93,7 +93,10 @@ public class IMCmdIslandInvite implements SuperiorCommand {
 	@Override
 	public List<String> tabComplete(SuperiorSkyblock superiorSkyblock, CommandSender commandSender, String[] args) {
 		if (args.length == 2) {
-			return List.of();
+			return List.of("초대");
+		}
+		if( args.length == 3 ){
+			return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
 		}
 
 		return List.of();

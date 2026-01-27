@@ -21,7 +21,7 @@ public class IMCmdIslandAccept implements SuperiorCommand {
 
 	@Override
 	public List<String> getAliases() {
-		return List.of("수락");
+		return List.of("초대 수락");
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class IMCmdIslandAccept implements SuperiorCommand {
 
 	@Override
 	public String getUsage(Locale locale) {
-		return "수락";
+		return "초대 수락";
 	}
 
 	@Override
@@ -88,9 +88,11 @@ public class IMCmdIslandAccept implements SuperiorCommand {
 	@Override
 	public List<String> tabComplete(SuperiorSkyblock superiorSkyblock, CommandSender commandSender, String[] args) {
 		if (args.length == 2) {
-			return List.of();
+			return List.of("초대");
 		}
-
+		if (args.length == 3) {
+			return List.of("수락");
+		}
 		return List.of();
 	}
 }
