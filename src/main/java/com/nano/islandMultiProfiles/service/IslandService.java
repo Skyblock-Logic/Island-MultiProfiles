@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
+import com.bgsoftware.superiorskyblock.api.enums.MemberRemoveReason;
 import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
 import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
@@ -222,6 +223,23 @@ public class IslandService {
 			island.addMember(sp, role);
 			sp.setIsland(island);
 			sp.setPlayerRole(role);
+		}
+	}
+
+	/**
+	 * @param player 섬장 입니다.
+	 * @param target 강퇴하려는 섬원 입니다.
+	 */
+	public void kickPlayer(Player player, Player target) {
+		SuperiorPlayer targetSp = SuperiorSkyblockAPI.getPlayer(target.getUniqueId());
+		SuperiorPlayer playerSp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+
+		Island island = playerSp.getIsland();
+		if ( island != null ){
+			island.removeMember(targetSp, MemberRemoveReason.KICK);
+			targetSp.setIsland(null);
+			player.sendMessage("추방 완료 "+target.getName());
+			target.sendMessage(" 추방되었음");
 		}
 	}
 }
