@@ -34,7 +34,7 @@ public class IslandService {
 	 * @param owner 해당 땅의 실 주인 입니다.
 	 * @note 메인 섬 생성메서드 입니다.
 	 */
-	public void createMainIsland(Player owner, String islandName){
+	public void createMainIsland(Player owner, String islandName) {
 		String defaultSchematic = "desert";
 		create(owner, islandName, defaultSchematic, 1);
 	}
@@ -44,9 +44,9 @@ public class IslandService {
 	 * @param slot 서브섬 번호입니다. ( 1번은 메인섬 입니다. ) ( 2 ~
 	 * @note 서브 섬 생성 메서드 입니다.
 	 */
-	public void createSubIsland(Player player, int slot){
+	public void createSubIsland(Player player, int slot) {
 		Island ownerIsland = getFakeIsland(player, 1);
-		if ( ownerIsland == null ){
+		if (ownerIsland == null) {
 			player.sendMessage(" 1번섬이 생성되지 않았습니다. 1번섬을 생성해주세요. ");
 			return;
 		}
@@ -55,8 +55,8 @@ public class IslandService {
 		create(player, islandName, defaultSchematic, slot);
 	}
 
-	public void create(Player player, String islandName, String schematicName, int slot){
-		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematicName,true)
+	public void create(Player player, String islandName, String schematicName, int slot) {
+		IslandFactory.createMultiProfileIsland(player, islandName, slot, schematicName, true)
 			.thenAccept(result -> {
 				if (result.getStatus() == IslandCreationAlgorithm.IslandCreationResult.Status.SUCCESS) {
 					player.sendMessage("§b섬 생성 완료: §f" + result.getIsland().getName());
@@ -71,7 +71,7 @@ public class IslandService {
 	 * @param slot 서브 섬 번호입니다.
 	 * @note 서브섬으로 이동하는 메서드 입니다.
 	 */
-	public void move(Player player, int slot){
+	public void move(Player player, int slot) {
 		Island island = getFakeIsland(player, slot);
 		switchMember(player, slot);
 		player.teleport(island.getCenterPosition().toLocation(getWorld("SuperiorWorld")));
@@ -81,7 +81,7 @@ public class IslandService {
 	 * @param player 권한을 업데이트 하려는 대상 입니다.
 	 * @param slot ( 2~ ) 번째 서브섬 번호 입니다.
 	 */
-	public void switchMember(Player player, int slot){
+	public void switchMember(Player player, int slot) {
 		SuperiorPlayer target = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
 
 		PlayerRole role = target.getPlayerRole();
@@ -132,15 +132,19 @@ public class IslandService {
 
 			while (index[0] <= MAX_ISLAND_SLOT && processed < islandsPerTick) {
 				Island subIsland = islandUuids[index[0]++];
-				if (subIsland == null) continue;
+				if (subIsland == null)
+					continue;
 
 				for (IslandFlag flag : flags) {
 					boolean target = enabled[flag.ordinal()];
 
-					if (subIsland.hasSettingsEnabled(flag) == target) continue;
+					if (subIsland.hasSettingsEnabled(flag) == target)
+						continue;
 
-					if (target) subIsland.enableSettings(flag);
-					else subIsland.disableSettings(flag);
+					if (target)
+						subIsland.enableSettings(flag);
+					else
+						subIsland.disableSettings(flag);
 				}
 
 				processed++;
@@ -156,9 +160,9 @@ public class IslandService {
 	 * @param island 메인 섬 입니다.
 	 * @note 메인 섬에 알바생이 추가/제거되면 서브섬에도 메인과 같은 알바생이 추가/제거되는 로직 입니다.
 	 */
-	public void updateCoopToSubIsland(Island island){
+	public void updateCoopToSubIsland(Island island) {
 		UUID ownerUuid = Objects.requireNonNull(island.getOwner().getUniqueId());
-		for ( int i = 1; i <= MAX_ISLAND_SLOT; i++ ) {
+		for (int i = 1; i <= MAX_ISLAND_SLOT; i++) {
 			Island subIsland = getFakeIsland(ownerUuid, i);
 			subIsland.getCoopPlayers().clear();
 			island.getCoopPlayers().forEach(subIsland::addCoop);
@@ -171,26 +175,28 @@ public class IslandService {
 	 */
 	public void rename(Player player, String newName) {
 		Island island = getFakeIsland(player, 1);
-		if ( island != null ){
+		if (island != null) {
 			island.setName(newName);
 
 			Island subIsland1 = getFakeIsland(player, 2);
 			Island subIsland2 = getFakeIsland(player, 3);
-			if ( subIsland1 !=null ) subIsland1.setName(IslandNamePolicy.encode(newName, 2));
-			if ( subIsland2 !=null ) subIsland2.setName(IslandNamePolicy.encode(newName, 3));
+			if (subIsland1 != null)
+				subIsland1.setName(IslandNamePolicy.encode(newName, 2));
+			if (subIsland2 != null)
+				subIsland2.setName(IslandNamePolicy.encode(newName, 3));
 		}
 	}
-
 
 	/**
 	 * @note 가짜 섬의 정보를 가져오는 로직 입니다.
 	 */
-	private Island getFakeIsland(Player player, int slot){
+	private Island getFakeIsland(Player player, int slot) {
 		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(player.getUniqueId()), slot);
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
 		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
 	}
-	private Island getFakeIsland(UUID playerUUID, int slot){
+
+	private Island getFakeIsland(UUID playerUUID, int slot) {
 		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID), slot);
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
 		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
@@ -217,8 +223,8 @@ public class IslandService {
 			.getCache()
 			.get(player);
 
-		if ( accept ){
-			SuperiorPlayer sp =  SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+		if (accept) {
+			SuperiorPlayer sp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
 			PlayerRole role = SuperiorSkyblockAPI.getRoles().getPlayerRole("Member");
 			island.addMember(sp, role);
 			sp.setIsland(island);
@@ -235,11 +241,25 @@ public class IslandService {
 		SuperiorPlayer playerSp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
 
 		Island island = playerSp.getIsland();
-		if ( island != null ){
-			island.removeMember(targetSp, MemberRemoveReason.KICK);
-			targetSp.setIsland(null);
-			player.sendMessage("추방 완료 "+target.getName());
-			target.sendMessage(" 추방되었음");
+		Island targetIsland = targetSp.getIsland();
+
+		if (island == null) {
+			// 메세지
+			return;
 		}
+
+		if (targetIsland == null) {
+			//메세지
+			return;
+		}
+
+		if (island != targetIsland) {
+			//메세지
+			return;
+		}
+		island.removeMember(targetSp, MemberRemoveReason.KICK);
+		targetSp.setIsland(null);
+		player.sendMessage("추방 완료 " + target.getName());
+		target.sendMessage(" 추방되었음");
 	}
 }
