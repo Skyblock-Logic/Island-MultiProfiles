@@ -257,7 +257,7 @@ public class IslandService {
 			//메세지
 			return;
 		}
-		island.removeMember(targetSp, MemberRemoveReason.KICK);
+		island.removeMember(targetSp, MemberRemoveReason.LEAVE);
 		targetSp.setIsland(null);
 		player.sendMessage("추방 완료 " + target.getName());
 		target.sendMessage(" 추방되었음");
