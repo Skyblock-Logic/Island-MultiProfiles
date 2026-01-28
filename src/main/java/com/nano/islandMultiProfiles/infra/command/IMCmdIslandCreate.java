@@ -13,14 +13,15 @@ import com.nano.islandMultiProfiles.annoitation.AnnotatedCommand;
 import com.nano.islandMultiProfiles.annoitation.CommandMeta;
 import com.nano.islandMultiProfiles.annoitation.CommandType;
 import com.nano.islandMultiProfiles.annoitation.HandleIslandException;
+import com.nano.islandMultiProfiles.api.MultiProfileAPI;
 import com.nano.islandMultiProfiles.exception.IslandException;
 import com.nano.islandMultiProfiles.service.IslandService;
 
 @CommandType(player = true, console = false)
 @CommandMeta(
-	aliases = {"subcreate"},
+	aliases = {"생성"},
 	permission = "superior.island.create",
-	usage = "subcreate <player> <slot> <name> <schematic>",
+	usage = "생성 <player> <slot> <name/empty>",
 	description = "<player> 명의로 된 <slot> 번호의 섬을 생성합니다.",
 	minArgs = 3,
 	maxArgs = 5,
@@ -42,22 +43,11 @@ public class IMCmdIslandCreate extends AnnotatedCommand {
 		// args[1] = <player>
 		// args[2] = <slot>
 		// args[3] = <name> (slot=1일 때만 사용)
+		Player target = MultiProfileAPI.getInstance()
+			.getProvider()
+			.getPlayerByName(args[1]);
 
-		Player target = Bukkit.getPlayer(args[1]);
-		if (target == null) {
-			throw new IslandException("존재하지 않는 플레이어입니다.");
-		}
-
-		int slot;
-		try {
-			slot = Integer.parseInt(args[2]);
-		} catch (NumberFormatException e) {
-			throw new IslandException("슬롯은 숫자여야 합니다.");
-		}
-
-		if (slot < 1 || slot > 3) {
-			throw new IslandException("슬롯은 1~3만 가능합니다.");
-		}
+		int slot = Integer.parseInt(args[2]);
 
 		if (slot == 1) {
 			if (args.length < 4 || args[3].isBlank()) {
