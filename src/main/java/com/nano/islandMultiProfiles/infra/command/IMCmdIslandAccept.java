@@ -41,6 +41,6 @@ public class IMCmdIslandAccept extends AnnotatedCommand {
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		islandService.acceptInvite(player,true);
+		islandService.respondToInvite(player,true);
 	}
 }

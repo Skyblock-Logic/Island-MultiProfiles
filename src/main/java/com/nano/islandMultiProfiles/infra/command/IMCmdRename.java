@@ -31,6 +31,6 @@ public class IMCmdRename extends AnnotatedCommand {
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		islandService.rename(player, args[1]);
+		islandService.renameIsland(player, args[1]);
 	}
 }

@@ -18,15 +18,15 @@ public class IslandUpdateListener implements Listener {
 
 	@EventHandler
 	public void enable(IslandEnableFlagEvent event){
-		islandService.update(event.getIsland());
+		islandService.syncFlagsToSlots(event.getIsland());
 	}
 
 	@EventHandler
 	public void disable(IslandDisableFlagEvent event){
-		islandService.update(event.getIsland());
+		islandService.syncFlagsToSlots(event.getIsland());
 	}
 	@EventHandler
 	public void coop(IslandCoopPlayerEvent event){
-		islandService.updateCoopToSubIsland(event.getIsland());
+		islandService.syncCoopToSlots(event.getIsland());
 	}
 }

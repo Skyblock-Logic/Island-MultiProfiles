@@ -41,6 +41,6 @@ public class IMCmdPlayerKick extends AnnotatedCommand {
 			.getProvider()
 			.getPlayerByName(args[1]);
 
-		islandService.kickPlayer(player, target);
+		islandService.kickMember(player, target);
 	}
 }

@@ -105,7 +105,7 @@ public abstract class AnnotatedCommand implements SuperiorCommand, CommandRunner
 		}
 
 		String rawToken = tokens.get(tokenIndex);
-		String prefix = args.length > 0 ? Objects.toString(args[args.length - 1], "") : "";
+		String prefix = Objects.toString(args[args.length - 1], "");
 
 		if (isPlaceholder(rawToken)) {
 			String key = unwrapPlaceholder(rawToken); // player / islandPlayer / !islandPlayer / slot ...

@@ -31,6 +31,6 @@ public class IMCmdTeleport extends AnnotatedCommand {
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		islandService.move(player, Integer.parseInt(args[2]));
+		islandService.teleportToSlotIsland(player, Integer.parseInt(args[2]));
 	}
 }
