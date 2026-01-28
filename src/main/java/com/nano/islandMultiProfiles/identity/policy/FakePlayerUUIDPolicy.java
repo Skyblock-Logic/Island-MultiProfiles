@@ -6,8 +6,8 @@ import java.util.UUID;
 public final class FakePlayerUUIDPolicy {
 	private FakePlayerUUIDPolicy() {}
 
-	public static UUID issue(UUID playerUUID, int groupId){
-		String source = "playerUUID:" + playerUUID.toString() + ",group:" + groupId;
+	public static UUID issue(UUID playerUUID, int slot){
+		String source = "playerUUID:" + playerUUID.toString() + ",group:" + slot;
 		return UUID.nameUUIDFromBytes(source.getBytes(StandardCharsets.UTF_8));
 	}
 }
