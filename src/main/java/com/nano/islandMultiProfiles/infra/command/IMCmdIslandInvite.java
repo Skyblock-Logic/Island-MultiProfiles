@@ -8,7 +8,7 @@ import com.nano.islandMultiProfiles.annoitation.AnnotatedCommand;
 import com.nano.islandMultiProfiles.annoitation.CommandMeta;
 import com.nano.islandMultiProfiles.annoitation.CommandType;
 import com.nano.islandMultiProfiles.annoitation.HandleIslandException;
-import com.nano.islandMultiProfiles.api.MultiProfileAPI;
+import com.nano.islandMultiProfiles.api.ProfileProviderCore;
 import com.nano.islandMultiProfiles.service.IslandService;
 
 @CommandType(player = true, console = false)
@@ -17,9 +17,7 @@ import com.nano.islandMultiProfiles.service.IslandService;
 	usage = "초대 <player>",
 	description = "<player> 에게 섬 초대장을 보냅니다.",
 	minArgs = 2,
-	maxArgs = 2,
-	console = true,
-	display = true
+	maxArgs = 2
 )
 @HandleIslandException
 public class IMCmdIslandInvite extends AnnotatedCommand {
@@ -40,7 +38,7 @@ public class IMCmdIslandInvite extends AnnotatedCommand {
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		Player target = MultiProfileAPI.getInstance()
+		Player target = ProfileProviderCore.getInstance()
 			.getProvider()
 			.getPlayerByName(args[1]);
 

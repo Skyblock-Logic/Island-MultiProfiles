@@ -16,7 +16,7 @@ import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorithm;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.nano.islandMultiProfiles.IslandMultiProfiles;
-import com.nano.islandMultiProfiles.api.MultiProfileAPI;
+import com.nano.islandMultiProfiles.api.ProfileProviderCore;
 import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
 import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
 import com.nano.islandMultiProfiles.identity.policy.IslandNamePolicy;
@@ -116,9 +116,7 @@ public class IslandService {
 				islandUuids[i] = subIsland;
 			}
 
-			Bukkit.getScheduler().runTask(plugin, () -> {
-				applyFlagsChunked(islandUuids, enabled);
-			});
+			Bukkit.getScheduler().runTask(plugin, () -> applyFlagsChunked(islandUuids, enabled));
 		});
 	}
 
@@ -192,13 +190,13 @@ public class IslandService {
 	 * @note 프로필 슬롯 섬 조회 공통 로직
 	 */
 	private Island findProfileIsland(Player player, int slot) {
-		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(player.getUniqueId()), slot);
+		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(player.getUniqueId()));
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
 		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
 	}
 
 	private Island findProfileIsland(UUID playerUUID, int slot) {
-		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID), slot);
+		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID));
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
 		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
 	}
@@ -209,7 +207,7 @@ public class IslandService {
 	 * @note 초대 캐시에 저장하고 만료는 캐시 정책에 따름
 	 */
 	public void invitePlayer(Player sender, Player target) {
-		MultiProfileAPI.getInstance()
+		ProfileProviderCore.getInstance()
 			.getCache()
 			.put(target, findProfileIsland(sender, MAIN_SLOT));
 
@@ -220,7 +218,7 @@ public class IslandService {
 	 * @param player 초대를 수락/거절할 플레이어
 	 */
 	public void respondToInvite(Player player, boolean accept) {
-		Island island = MultiProfileAPI.getInstance()
+		Island island = ProfileProviderCore.getInstance()
 			.getCache()
 			.get(player);
 

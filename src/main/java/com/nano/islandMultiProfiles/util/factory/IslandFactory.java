@@ -31,7 +31,7 @@ public final class IslandFactory {
 		SuperiorPlayer ow = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
 
 		// 1. UUID 및 가짜 플레이어 설정
-		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(player.getUniqueId(), slot);
+		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(player.getUniqueId());
 		SuperiorPlayer fakeSp = SuperiorSkyblockAPI.getPlayer(fakePlayerUUID);
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
 

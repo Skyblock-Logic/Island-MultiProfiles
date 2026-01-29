@@ -13,7 +13,7 @@ import com.nano.islandMultiProfiles.annoitation.AnnotatedCommand;
 import com.nano.islandMultiProfiles.annoitation.CommandMeta;
 import com.nano.islandMultiProfiles.annoitation.CommandType;
 import com.nano.islandMultiProfiles.annoitation.HandleIslandException;
-import com.nano.islandMultiProfiles.api.MultiProfileAPI;
+import com.nano.islandMultiProfiles.api.ProfileProviderCore;
 import com.nano.islandMultiProfiles.exception.IslandException;
 import com.nano.islandMultiProfiles.service.IslandService;
 
@@ -25,8 +25,7 @@ import com.nano.islandMultiProfiles.service.IslandService;
 	description = "<player> 명의로 된 <slot> 번호의 섬을 생성합니다.",
 	minArgs = 3,
 	maxArgs = 5,
-	console = false,
-	display = true
+	console = false
 )
 @HandleIslandException
 public class IMCmdIslandCreate extends AnnotatedCommand {
@@ -43,7 +42,7 @@ public class IMCmdIslandCreate extends AnnotatedCommand {
 		// args[1] = <player>
 		// args[2] = <slot>
 		// args[3] = <name> (slot=1일 때만 사용)
-		Player target = MultiProfileAPI.getInstance()
+		Player target = ProfileProviderCore.getInstance()
 			.getProvider()
 			.getPlayerByName(args[1]);
 
