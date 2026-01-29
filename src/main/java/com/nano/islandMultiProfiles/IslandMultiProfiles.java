@@ -9,12 +9,15 @@ import com.nano.islandMultiProfiles.infra.command.IMCmdIslandInvite;
 import com.nano.islandMultiProfiles.infra.command.IMCmdPlayerKick;
 import com.nano.islandMultiProfiles.infra.command.IMCmdRename;
 import com.nano.islandMultiProfiles.infra.command.IMCmdTeleport;
+import com.nano.islandMultiProfiles.infra.command.coop.IMCmdCoopInvite;
 import com.nano.islandMultiProfiles.listener.IslandUpdateListener;
+import com.nano.islandMultiProfiles.service.IslandCoopService;
 import com.nano.islandMultiProfiles.service.IslandService;
 
 public final class IslandMultiProfiles extends JavaPlugin {
 
     private final IslandService islandService = new IslandService(this);
+    private final IslandCoopService islandCoopService = new IslandCoopService(this);
 
 
     @Override
@@ -30,6 +33,8 @@ public final class IslandMultiProfiles extends JavaPlugin {
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandInvite(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandAccept(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdPlayerKick(islandService));
+
+        SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdCoopInvite(islandCoopService));
     }
 
     private void onEvent(){
