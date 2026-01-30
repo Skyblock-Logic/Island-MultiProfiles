@@ -17,30 +17,29 @@ import com.nano.islandMultiProfiles.service.IslandCoopService;
 )
 @CommandMeta(
 	aliases = {"알바"},
-	usage = "알바 추방 <coopPlayer>",
-	description = "알바로 추가된 플레이어를 추방 합니다.",
+	usage = "알바 나가기 <islandName>",
+	description = "현재 자신이 알바로 추가된 섬에서 나갑니다.",
 	minArgs = 3,
 	maxArgs = 3
 )
 @HandleIslandException
-public class IMCmdCoopKick extends AnnotatedCommand {
+public class IMCmdCoopLeave extends AnnotatedCommand {
 
 	private final IslandCoopService islandService;
 
-	public IMCmdCoopKick(IslandCoopService islandService) {
+	public IMCmdCoopLeave(IslandCoopService islandService) {
 		this.islandService = islandService;
 	}
 	/**
-	 * @note 섬에 알바를 추방하는 기능
+	 * @note 알바를 나가는 기능
 	 * @see IMCmdIslandInvite
 	 * @condition
 	 * - 명령어를 쓰는 사람은 플레이어야 한다.
-	 * - 알바 추방은 섬장만 가능하다.
-	 * - 없는 알바생은 추방할 수 없다.
+	 * - 존재하지 않는 섬은 나갈 수 없다.
 	 */
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		islandService.kickCoopPlayer(player, args[2]);
+		islandService.leaveCoop(player, args[2]);
 	}
 }

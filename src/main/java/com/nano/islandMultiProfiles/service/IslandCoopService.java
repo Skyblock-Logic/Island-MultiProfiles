@@ -39,6 +39,10 @@ public class IslandCoopService {
 		// 메세지 : 알바 추가됨 메세지
 	}
 
+	/**
+	 * @param player 알바생 ( 본인 )
+	 * @param playerName 섬이름
+	 */
 	public void kickCoopPlayer(Player player, String playerName) {
 		Player target = core.getProvider()
 			.getPlayerByName(playerName);
@@ -65,5 +69,14 @@ public class IslandCoopService {
 		}
 
 		return true;
+	}
+
+	public void leaveCoop(Player player, String islandName) {
+		SuperiorPlayer sp = SuperiorSkyblockAPI.getPlayer(player);
+
+		sp.getCoopIslands().stream()
+			.filter(island -> island.getName().equals(islandName))
+			.forEach(island -> island.removeCoop(sp));
+		// 메세지 : 나갔다는 메세지
 	}
 }
