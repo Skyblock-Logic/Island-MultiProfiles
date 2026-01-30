@@ -25,14 +25,7 @@ public class IslandCoopService {
 		Player target = core.getProvider()
 			.getPlayerByName(playerName);
 
-		SuperiorPlayer adminSp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
-		if ( adminSp.getIsland() == null ){
-			// 메세지 ( 섬에 가입이 되어있지 않거나 없음 )
-			return;
-		}
-
-		if (adminSp.getPlayerRole() != SuperiorSkyblockAPI.getRoles().getPlayerRole("ADMIN")){
-			// 메세지 : 어드민 권한이 아님
+		if ( !check(player) ){
 			return;
 		}
 
@@ -44,5 +37,33 @@ public class IslandCoopService {
 
 		mainIsland.addCoop(SuperiorSkyblockAPI.getPlayer(target.getUniqueId()));
 		// 메세지 : 알바 추가됨 메세지
+	}
+
+	public void kickCoopPlayer(Player player, String playerName) {
+		Player target = core.getProvider()
+			.getPlayerByName(playerName);
+
+		if ( !check(player) ){
+			return;
+		}
+
+		Island mainIsland = core.getInfoProvider().getMainIsland(player);
+		mainIsland.removeCoop(SuperiorSkyblockAPI.getPlayer(target.getUniqueId()));
+		// 메세지 : 추방됨
+	}
+
+	private boolean check(Player player){
+		SuperiorPlayer adminSp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+		if ( adminSp.getIsland() == null ){
+			// 메세지 ( 섬에 가입이 되어있지 않거나 없음 )
+			return false;
+		}
+
+		if (adminSp.getPlayerRole() != SuperiorSkyblockAPI.getRoles().getPlayerRole("ADMIN")){
+			// 메세지 : 어드민 권한이 아님
+			return false;
+		}
+
+		return true;
 	}
 }
