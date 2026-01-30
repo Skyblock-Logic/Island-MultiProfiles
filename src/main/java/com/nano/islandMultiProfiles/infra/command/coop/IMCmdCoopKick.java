@@ -17,8 +17,8 @@ import com.nano.islandMultiProfiles.service.IslandCoopService;
 )
 @CommandMeta(
 	aliases = {"알바"},
-	usage = "알바 초대 <!islandPlayer>",
-	description = "<player> 을 알바로 추가 합니다.",
+	usage = "알바 추방 <coopPlayer>",
+	description = "알바로 추가된 플레이어를 추방 합니다.",
 	minArgs = 3,
 	maxArgs = 3,
 	console = true,
