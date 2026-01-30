@@ -14,6 +14,8 @@ import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.commands.SuperiorCommand;
 import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
+import com.nano.islandMultiProfiles.api.ProfileProviderCore;
 import com.nano.islandMultiProfiles.interceptor.CommandRunner;
 
 public abstract class AnnotatedCommand implements SuperiorCommand, CommandRunner.CoreCommand {
@@ -85,6 +87,7 @@ public abstract class AnnotatedCommand implements SuperiorCommand, CommandRunner
 	 * - <player> : 전체 온라인 플레이어
 	 * - <islandPlayer> : 내 섬에 속한 온라인 플레이어
 	 * - <!islandPlayer> : 내 섬에 속하지 않은 온라인 플레이어
+	 * - <coopPlayer> : 알바로 추가된 플레리어 목록
 	 * - <slot> : 1,2,3
 	 */
 	@Override
@@ -159,6 +162,18 @@ public abstract class AnnotatedCommand implements SuperiorCommand, CommandRunner
 				List<String> names = Bukkit.getOnlinePlayers().stream()
 					.filter(p -> SuperiorSkyblockAPI.getPlayer(p.getUniqueId()).getIsland() != myIsland)
 					.map(Player::getName)
+					.toList();
+
+				yield filterByPrefix(names, prefix);
+			}
+
+			case "coopPlayer" -> {
+				if (!(sender instanceof Player player)) yield List.of();
+				Island myIsland = ProfileProviderCore.getInstance().getInfoProvider().getMainIsland(player);
+
+				List<String> names = myIsland.getCoopPlayers()
+					.stream()
+					.map(SuperiorPlayer::getName)
 					.toList();
 
 				yield filterByPrefix(names, prefix);
