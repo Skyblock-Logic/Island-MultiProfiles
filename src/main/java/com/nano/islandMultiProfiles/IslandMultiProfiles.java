@@ -6,6 +6,7 @@ import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.nano.islandMultiProfiles.infra.command.coop.IMCmdCoopInvite;
 import com.nano.islandMultiProfiles.infra.command.coop.IMCmdCoopKick;
 import com.nano.islandMultiProfiles.infra.command.coop.IMCmdCoopLeave;
+import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdIslandDisband;
 import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdIslandInvite;
 import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdPlayerKick;
 import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdRename;
@@ -35,6 +36,7 @@ public final class IslandMultiProfiles extends JavaPlugin {
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandInvite(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandAccept(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdPlayerKick(islandService));
+        SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandDisband(islandService));
 
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdCoopInvite(islandCoopService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdCoopKick(islandCoopService));

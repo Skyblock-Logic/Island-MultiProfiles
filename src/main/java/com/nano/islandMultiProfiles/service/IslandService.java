@@ -262,6 +262,34 @@ public class IslandService {
 		target.sendMessage("섬에서 추방되었습니다.");
 	}
 
+	/**
+	 * @param player 섬장
+	 * @note 섬을 삭제하는 명령어 입니다. ( slot main, sub ) 전부 삭제 됩니다.
+	 */
+	public void disbandIsland(Player player) {
+		SuperiorPlayer sp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+		if ( sp.getPlayerRole() != SuperiorSkyblockAPI.getRoles().getPlayerRole("ADMIN") ){
+			// 메세지 : 섬장이 아님.
+			return;
+		}
+
+		Island mainIsland = ProfileProviderCore.getInstance()
+			.getInfoProvider()
+			.getMainIsland(player);
+
+		SuperiorPlayer fakeSp = mainIsland.getOwner();
+		UUID fakePlayerUUID = fakeSp.getUniqueId();
+
+		for ( int i = 1; i <= MAX_ISLAND_SLOT; i++ ) {
+			UUID fakeIslandUUId = FakeIslandUUIdPolicy.issue(fakePlayerUUID,i);
+			Island slotIsland = SuperiorSkyblockAPI.getIslandByUUID(fakeIslandUUId);
+			SuperiorSkyblockAPI.deleteIsland(slotIsland);
+			//메세지 : 섬 삭제 메세지
+		}
+
+
+	}
+
 	// ---- 공통 설명용 주석 ----
 	// - 슬롯 기반 섬은 FakePlayerUUIDPolicy + FakeIslandUUIdPolicy 규칙으로 조회한다.
 	// - MAIN_SLOT(1) 기준으로 메인 섬 정보를 복사/동기화한다.
