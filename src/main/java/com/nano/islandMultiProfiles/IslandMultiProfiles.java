@@ -10,6 +10,7 @@ import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdIslandDisban
 import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdIslandInvite;
 import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdPlayerKick;
 import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdRename;
+import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdSetSpawn;
 import com.nano.islandMultiProfiles.infra.command.island.common.IMCmdIslandCreate;
 import com.nano.islandMultiProfiles.infra.command.island.common.IMCmdTeleport;
 import com.nano.islandMultiProfiles.infra.command.island.member.IMCmdIslandAccept;
@@ -37,6 +38,7 @@ public final class IslandMultiProfiles extends JavaPlugin {
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandAccept(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdPlayerKick(islandService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdIslandDisband(islandService));
+        SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdSetSpawn(islandService));
 
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdCoopInvite(islandCoopService));
         SuperiorSkyblockAPI.getCommands().registerCommand(new IMCmdCoopKick(islandCoopService));
