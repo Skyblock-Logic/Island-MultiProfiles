@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
@@ -287,6 +288,33 @@ public class IslandService {
 			//메세지 : 섬 삭제 메세지
 		}
 
+
+	}
+
+	/**
+	 * @param player 섬장
+	 * @note 섬 스폰 위치를 변경하는 메서드 입니다.
+	 */
+	public void setSpawn(Player player) {
+		SuperiorPlayer sp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+		if ( sp.getPlayerRole() != SuperiorSkyblockAPI.getRoles().getPlayerRole("ADMIN") ){
+			// 메세지 : 섬장이 아님.
+			return;
+		}
+
+		Location nowLoc = player.getLocation();
+		Island nowIsland = SuperiorSkyblockAPI.getIslandAt(nowLoc);
+
+		Island mainIsland = ProfileProviderCore.getInstance()
+			.getInfoProvider()
+			.getMainIsland(player);
+
+		if ( nowIsland != mainIsland ) {
+			// 메세지 : 두 섬이 다름 ( 메인섬이 아님 )
+			return;
+		}
+		mainIsland.setIslandHome(nowLoc);
+		// 메세지 : 스폰 설젖완료
 
 	}
 
