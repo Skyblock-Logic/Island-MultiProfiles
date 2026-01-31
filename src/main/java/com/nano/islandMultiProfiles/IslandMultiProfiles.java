@@ -3,15 +3,15 @@ package com.nano.islandMultiProfiles;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
-import com.nano.islandMultiProfiles.infra.command.IMCmdIslandAccept;
-import com.nano.islandMultiProfiles.infra.command.IMCmdIslandCreate;
-import com.nano.islandMultiProfiles.infra.command.IMCmdIslandInvite;
-import com.nano.islandMultiProfiles.infra.command.IMCmdPlayerKick;
-import com.nano.islandMultiProfiles.infra.command.IMCmdRename;
-import com.nano.islandMultiProfiles.infra.command.IMCmdTeleport;
 import com.nano.islandMultiProfiles.infra.command.coop.IMCmdCoopInvite;
 import com.nano.islandMultiProfiles.infra.command.coop.IMCmdCoopKick;
 import com.nano.islandMultiProfiles.infra.command.coop.IMCmdCoopLeave;
+import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdIslandInvite;
+import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdPlayerKick;
+import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdRename;
+import com.nano.islandMultiProfiles.infra.command.island.common.IMCmdIslandCreate;
+import com.nano.islandMultiProfiles.infra.command.island.common.IMCmdTeleport;
+import com.nano.islandMultiProfiles.infra.command.island.member.IMCmdIslandAccept;
 import com.nano.islandMultiProfiles.listener.IslandUpdateListener;
 import com.nano.islandMultiProfiles.service.IslandCoopService;
 import com.nano.islandMultiProfiles.service.IslandService;
@@ -43,10 +43,5 @@ public final class IslandMultiProfiles extends JavaPlugin {
 
     private void onEvent(){
         getServer().getPluginManager().registerEvents(new IslandUpdateListener(islandService),this);
-    }
-
-    @Override
-    public void onDisable() {
-
     }
 }

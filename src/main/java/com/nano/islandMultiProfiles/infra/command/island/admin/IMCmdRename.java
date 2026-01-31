@@ -1,4 +1,4 @@
-package com.nano.islandMultiProfiles.infra.command;
+package com.nano.islandMultiProfiles.infra.command.island.admin;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

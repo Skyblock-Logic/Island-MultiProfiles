@@ -1,4 +1,4 @@
-package com.nano.islandMultiProfiles.infra.command;
+package com.nano.islandMultiProfiles.infra.command.island.common;
 
 import java.util.ArrayList;
 import java.util.List;

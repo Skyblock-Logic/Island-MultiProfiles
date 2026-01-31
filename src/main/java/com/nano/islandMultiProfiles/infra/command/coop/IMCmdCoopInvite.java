@@ -8,7 +8,7 @@ import com.nano.islandMultiProfiles.annoitation.AnnotatedCommand;
 import com.nano.islandMultiProfiles.annoitation.CommandMeta;
 import com.nano.islandMultiProfiles.annoitation.CommandType;
 import com.nano.islandMultiProfiles.annoitation.HandleIslandException;
-import com.nano.islandMultiProfiles.infra.command.IMCmdIslandInvite;
+import com.nano.islandMultiProfiles.infra.command.island.admin.IMCmdIslandInvite;
 import com.nano.islandMultiProfiles.service.IslandCoopService;
 
 @CommandType(
