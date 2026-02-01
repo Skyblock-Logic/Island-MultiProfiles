@@ -318,6 +318,27 @@ public class IslandService {
 
 	}
 
+	/**
+	 * @param flagName 플래그 이름
+	 * @param b 플래그 설정 값 ( true/false )
+	 */
+	public void setting(Player sender, String flagName, boolean b) {
+		IslandFlag islandFlag = IslandFlag.getByName(flagName);
+
+		Island mainIsland = ProfileProviderCore.getInstance()
+			.getInfoProvider()
+			.getMainIsland(sender);
+
+		if (b) {
+			mainIsland.enableSettings(islandFlag);
+			// 메세지 : 설정 활성화
+		} else {
+			mainIsland.disableSettings(islandFlag);
+			// 메세지 : 설정 비활성화
+		}
+
+	}
+
 	// ---- 공통 설명용 주석 ----
 	// - 슬롯 기반 섬은 FakePlayerUUIDPolicy + FakeIslandUUIdPolicy 규칙으로 조회한다.
 	// - MAIN_SLOT(1) 기준으로 메인 섬 정보를 복사/동기화한다.
