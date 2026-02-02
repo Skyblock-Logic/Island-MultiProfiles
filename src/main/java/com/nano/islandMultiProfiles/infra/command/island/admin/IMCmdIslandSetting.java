@@ -15,7 +15,7 @@ import com.nano.islandMultiProfiles.service.IslandService;
 
 @CommandType(player = true, console = false)
 @CommandMeta(
-	aliases = {"설정 <type> <true/false>"},
+	aliases = {"설정"},
 	usage = "설정 <type> <true/false>",
 	description = "메인 섬의 세부사항을 설정합니다.",
 	minArgs = 3,
