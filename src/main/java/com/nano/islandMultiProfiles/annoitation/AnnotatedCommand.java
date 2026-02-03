@@ -1,5 +1,6 @@
 package com.nano.islandMultiProfiles.annoitation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -93,29 +94,32 @@ public abstract class AnnotatedCommand implements SuperiorCommand, CommandRunner
 	@Override
 	public List<String> tabComplete(SuperiorSkyblock superiorSkyblock, CommandSender sender, String[] args) {
 		String usage = meta.usage();
-		if (usage == null || usage.isBlank()) {
-			return List.of();
-		}
+		if (usage == null || usage.isBlank()) return List.of();
 
-		List<String> tokens = Arrays.stream(usage.trim().split("\\s+"))
+		List<String> tokens = new ArrayList<>(Arrays.stream(usage.trim().split("\\s+"))
 			.filter(s -> !s.isBlank())
-			.toList();
+			.toList());
 
-		// args[1]이 usage의 첫 토큰에 해당 (기존 코드 패턴과 맞춤)
-		int tokenIndex = args.length - 2;
-		if (tokenIndex < 0 || tokenIndex >= tokens.size()) {
-			return List.of();
+		// usage가 "이동 <...>" 처럼 커맨드 리터럴을 포함하면 제거
+		if (!tokens.isEmpty()) {
+			String first = tokens.getFirst();
+			boolean isAliasLiteral = Arrays.stream(meta.aliases())
+				.anyMatch(a -> a.equalsIgnoreCase(first));
+			if (isAliasLiteral) tokens.removeFirst();
 		}
+
+		// 이제 args[1]이 tokens[0]에 대응되도록 유지
+		int tokenIndex = args.length - 2;
+		if (tokenIndex < 0 || tokenIndex >= tokens.size()) return List.of();
 
 		String rawToken = tokens.get(tokenIndex);
 		String prefix = Objects.toString(args[args.length - 1], "");
 
 		if (isPlaceholder(rawToken)) {
-			String key = unwrapPlaceholder(rawToken); // player / islandPlayer / !islandPlayer / slot ...
+			String key = unwrapPlaceholder(rawToken);
 			return completePlaceholder(sender, key, prefix);
 		}
 
-		// literal 토큰
 		return filterByPrefix(List.of(rawToken), prefix);
 	}
 
