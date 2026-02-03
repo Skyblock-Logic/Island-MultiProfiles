@@ -1,5 +1,6 @@
 package com.nano.islandMultiProfiles.api.info;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,19 +13,25 @@ import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.nano.islandMultiProfiles.exception.PlayerNotFoundException;
 import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
 import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
+import com.nano.islandMultiProfiles.identity.policy.IslandNamePolicy;
 
 public final class IslandInfoProvider {
 	/**
-	 * @param playerUUID 유저 ID
-	 * @return {@link Optional} {@link Island}
-	 * @note 유저가 속해있는 섬을 찾는 메서드 입니다.
+	 * @note 프로필 슬롯 섬 조회 공통 로직
 	 */
-	public Optional<Island> findByIsland(UUID playerUUID) {
+	public Optional<Island> findProfileIsland(Player player, int slot) {
+		return findProfileIsland(player.getUniqueId(), slot);
+	}
 
-		SuperiorPlayer sp = SuperiorSkyblockAPI.getPlayer(playerUUID);
-		Island island = sp.getIsland();
+	public Optional<Island> findProfileIsland(UUID playerUUID, int slot) {
+		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID));
+		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
+		return Optional.of(SuperiorSkyblockAPI.getIslandByUUID(islandUUID));
+	}
 
-		return Optional.empty();
+	public Island getIsland(String islandName, int slot){
+		String encodeName = IslandNamePolicy.encode(islandName,slot);
+		return SuperiorSkyblockAPI.getIsland(encodeName);
 	}
 
 	/**

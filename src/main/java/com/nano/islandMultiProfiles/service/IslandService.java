@@ -3,6 +3,7 @@ package com.nano.islandMultiProfiles.service;
 import static org.bukkit.Bukkit.*;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -18,15 +19,18 @@ import com.bgsoftware.superiorskyblock.api.world.algorithm.IslandCreationAlgorit
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.nano.islandMultiProfiles.IslandMultiProfiles;
 import com.nano.islandMultiProfiles.api.ProfileProviderCore;
+import com.nano.islandMultiProfiles.api.info.IslandInfoProvider;
+import com.nano.islandMultiProfiles.exception.IslandException;
 import com.nano.islandMultiProfiles.identity.policy.FakeIslandUUIdPolicy;
-import com.nano.islandMultiProfiles.identity.policy.FakePlayerUUIDPolicy;
 import com.nano.islandMultiProfiles.identity.policy.IslandNamePolicy;
 import com.nano.islandMultiProfiles.util.factory.IslandFactory;
 
 public class IslandService {
 	private final IslandMultiProfiles plugin;
 	private final int MAX_ISLAND_SLOT = 3;
-	private static final int MAIN_SLOT = 1;
+	private final int MAIN_SLOT = 1;
+
+	private final IslandInfoProvider islandInfo = ProfileProviderCore.getInstance().getInfoProvider();
 
 	public IslandService(IslandMultiProfiles plugin) {
 		this.plugin = plugin;
@@ -47,13 +51,11 @@ public class IslandService {
 	 * @note 메인 섬 정보를 복사해 서브 섬을 생성
 	 */
 	public void createSubIsland(Player player, int slot) {
-		Island ownerIsland = findProfileIsland(player, MAIN_SLOT);
-		if (ownerIsland == null) {
-			player.sendMessage(" 1번 섬이 없습니다. 먼저 1번 섬을 생성해 주세요. ");
-			return;
-		}
-		String defaultSchematic = ownerIsland.getSchematicName();
-		String islandName = ownerIsland.getName();
+		var island = islandInfo.findProfileIsland(player, MAIN_SLOT)
+			.orElseThrow(() -> new IslandException("메인 섬이 존재하지 않습니다. 메인섬을 먼저 생성해 주세요."));
+
+		String defaultSchematic = island.getSchematicName();
+		String islandName = IslandNamePolicy.encode(island.getName(), slot);
 		createIslandSlot(player, islandName, defaultSchematic, slot);
 	}
 
@@ -73,8 +75,8 @@ public class IslandService {
 	 * @param slot 슬롯 번호
 	 * @note 슬롯 섬으로 이동 (권한/역할 스위칭 포함)
 	 */
-	public void teleportToSlotIsland(Player player, int slot) {
-		Island island = findProfileIsland(player, slot);
+	public void teleportToSlotIsland(Player player, String islandName, int slot) {
+		Island island = islandInfo.getIsland(islandName, slot);
 		switchMemberToSlot(player, slot);
 		player.teleport(island.getCenterPosition().toLocation(getWorld("SuperiorWorld")));
 	}
@@ -113,8 +115,10 @@ public class IslandService {
 		Bukkit.getAsyncScheduler().runNow(plugin, task -> {
 			Island[] islandUuids = new Island[MAX_ISLAND_SLOT + 1];
 			for (int i = 1; i <= MAX_ISLAND_SLOT; i++) {
-				Island subIsland = findProfileIsland(ownerUuid, i);
-				islandUuids[i] = subIsland;
+				Optional<Island> islandOpt = islandInfo.findProfileIsland(ownerUuid, i);
+				if( islandOpt.isPresent() ){
+					islandUuids[i] = islandOpt.get();
+				}
 			}
 
 			Bukkit.getScheduler().runTask(plugin, () -> applyFlagsChunked(islandUuids, enabled));
@@ -163,7 +167,9 @@ public class IslandService {
 	public void syncCoopToSlots(Island island) {
 		UUID ownerUuid = Objects.requireNonNull(island.getOwner().getUniqueId());
 		for (int i = 1; i <= MAX_ISLAND_SLOT; i++) {
-			Island subIsland = findProfileIsland(ownerUuid, i);
+			Island subIsland = islandInfo.findProfileIsland(ownerUuid, i)
+					.orElseThrow(()->new IslandException("섬을 찾을 수 없습니다."));
+
 			subIsland.getCoopPlayers().clear();
 			island.getCoopPlayers().forEach(subIsland::addCoop);
 		}
@@ -174,32 +180,16 @@ public class IslandService {
 	 * @param newName 새 섬 이름 (중복 불가)
 	 */
 	public void renameIsland(Player player, String newName) {
-		Island island = findProfileIsland(player, MAIN_SLOT);
-		if (island != null) {
-			island.setName(newName);
+		Island island = islandInfo.findProfileIsland(player, MAIN_SLOT)
+			.orElseThrow(()->new IslandException("섬을 찾을 수 없습니다."));
 
-			Island subIsland1 = findProfileIsland(player, 2);
-			Island subIsland2 = findProfileIsland(player, 3);
-			if (subIsland1 != null)
-				subIsland1.setName(IslandNamePolicy.encode(newName, 2));
-			if (subIsland2 != null)
-				subIsland2.setName(IslandNamePolicy.encode(newName, 3));
-		}
-	}
+		island.setName(newName);
 
-	/**
-	 * @note 프로필 슬롯 섬 조회 공통 로직
-	 */
-	private Island findProfileIsland(Player player, int slot) {
-		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(player.getUniqueId()));
-		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
-		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
-	}
+		Optional<Island> subIslandOpt2 = islandInfo.findProfileIsland(player, 2);
+		subIslandOpt2.ifPresent(subIsland -> subIsland.setName(IslandNamePolicy.encode(newName, 2)));
 
-	private Island findProfileIsland(UUID playerUUID, int slot) {
-		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID));
-		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
-		return SuperiorSkyblockAPI.getIslandByUUID(islandUUID);
+		Optional<Island> subIslandOpt3 = islandInfo.findProfileIsland(player, 3);
+		subIslandOpt3.ifPresent(subIsland -> subIsland.setName(IslandNamePolicy.encode(newName, 3)));
 	}
 
 	/**
@@ -208,9 +198,11 @@ public class IslandService {
 	 * @note 초대 캐시에 저장하고 만료는 캐시 정책에 따름
 	 */
 	public void invitePlayer(Player sender, Player target) {
+		Island mainIsland = islandInfo.getMainIsland(sender);
+
 		ProfileProviderCore.getInstance()
 			.getCache()
-			.put(target, findProfileIsland(sender, MAIN_SLOT));
+			.put(target, mainIsland);
 
 		target.sendMessage(" 섬 초대가 도착했습니다. 30초 내에 수락해 주세요.");
 	}
@@ -337,6 +329,30 @@ public class IslandService {
 			// 메세지 : 설정 비활성화
 		}
 
+	}
+
+	public void upgradeIsland(Player player) {
+		SuperiorPlayer sp = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
+
+		Island mainIsland = ProfileProviderCore.getInstance()
+			.getInfoProvider()
+			.getMainIsland(player);
+
+		if (sp.getPlayerRole() != SuperiorSkyblockAPI.getRoles().getPlayerRole("ADMIN")){
+			// 메세지 : 어드민 아님
+			return;
+		}
+
+		mainIsland.getUpgrades();
+		// TODO : 업그레이드  Map 뭔지 봐야함
+
+	}
+
+	public void upgradeIsland(Player player, String islandName) {
+
+	}
+
+	public void upgradeIsland(Player player, String islandName, int step) {
 	}
 
 	// ---- 공통 설명용 주석 ----
