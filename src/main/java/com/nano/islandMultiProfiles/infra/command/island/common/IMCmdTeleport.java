@@ -13,10 +13,10 @@ import com.nano.islandMultiProfiles.service.IslandService;
 @CommandType(player = true, console = false)
 @CommandMeta(
 	aliases = {"이동"},
-	usage = "이동 <player> <name> <slot>",
+	usage = "이동 <name> <slot>",
 	description = "특정 섬 번호로 이동합니다.",
-	minArgs = 4,
-	maxArgs = 4,
+	minArgs = 3,
+	maxArgs = 3,
 	console = true,
 	display = true
 )
@@ -31,6 +31,9 @@ public class IMCmdTeleport extends AnnotatedCommand {
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		islandService.teleportToSlotIsland(player, Integer.parseInt(args[2]));
+		String islandName = args[1];
+		int slot = Integer.parseInt(args[2]);
+
+		islandService.teleportToSlotIsland(player, islandName, slot);
 	}
 }
