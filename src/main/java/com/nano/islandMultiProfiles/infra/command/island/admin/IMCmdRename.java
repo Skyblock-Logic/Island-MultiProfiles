@@ -13,7 +13,7 @@ import com.nano.islandMultiProfiles.service.IslandService;
 @CommandType(player = true, console = false)
 @CommandMeta(
 	aliases = {"이름"},
-	usage = "이름 <new name>",
+	usage = "이름 <명칭>",
 	description = "섬의 명칭을 변경합니다.",
 	minArgs = 2,
 	maxArgs = 2,

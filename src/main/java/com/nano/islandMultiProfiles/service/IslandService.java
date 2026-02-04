@@ -92,7 +92,8 @@ public class IslandService {
 		Island island = target.getIsland();
 
 		String islandName = IslandNamePolicy.decode(island.getName());
-		Island toIsland = SuperiorSkyblockAPI.getIsland(IslandNamePolicy.encode(islandName, slot));
+		Island toIsland = islandInfo.findIsland(islandName,slot)
+				.orElseThrow(()->new IslandException("섬을 찾을 수 없습니다."));
 
 		toIsland.addMember(target, role);
 		target.setIsland(toIsland);
