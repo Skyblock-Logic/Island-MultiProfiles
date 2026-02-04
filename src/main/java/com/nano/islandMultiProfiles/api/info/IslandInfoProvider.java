@@ -26,7 +26,11 @@ public final class IslandInfoProvider {
 	public Optional<Island> findProfileIsland(UUID playerUUID, int slot) {
 		UUID fakePlayerUUID = FakePlayerUUIDPolicy.issue(Objects.requireNonNull(playerUUID));
 		UUID islandUUID = FakeIslandUUIdPolicy.issue(fakePlayerUUID, slot);
-		return Optional.of(SuperiorSkyblockAPI.getIslandByUUID(islandUUID));
+		return Optional.ofNullable(SuperiorSkyblockAPI.getIslandByUUID(islandUUID));
+	}
+
+	public Optional<Island> findIsland(String islandName, int slot) {
+		return Optional.ofNullable(getIsland(islandName,slot));
 	}
 
 	public Island getIsland(String islandName, int slot){
