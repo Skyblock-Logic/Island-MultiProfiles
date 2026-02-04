@@ -16,11 +16,11 @@ import com.nano.islandMultiProfiles.service.IslandCoopService;
 	console = true
 )
 @CommandMeta(
-	aliases = {"알바"},
-	usage = "알바 추방 <coopPlayer>",
+	aliases = {"알바추방"},
+	usage = "알바추방 <coopPlayer>",
 	description = "알바로 추가된 플레이어를 추방 합니다.",
-	minArgs = 3,
-	maxArgs = 3
+	minArgs = 2,
+	maxArgs = 2
 )
 @HandleIslandException
 public class IMCmdCoopKick extends AnnotatedCommand {
@@ -41,6 +41,6 @@ public class IMCmdCoopKick extends AnnotatedCommand {
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		islandService.kickCoopPlayer(player, args[2]);
+		islandService.kickCoopPlayer(player, args[1]);
 	}
 }

@@ -16,11 +16,11 @@ import com.nano.islandMultiProfiles.service.IslandCoopService;
 	console = true
 )
 @CommandMeta(
-	aliases = {"알바"},
-	usage = "알바 나가기 <islandName>",
+	aliases = {"알바나가기"},
+	usage = "알바나가기 <islandName>",
 	description = "현재 자신이 알바로 추가된 섬에서 나갑니다.",
-	minArgs = 3,
-	maxArgs = 3
+	minArgs = 2,
+	maxArgs = 2
 )
 @HandleIslandException
 public class IMCmdCoopLeave extends AnnotatedCommand {
@@ -40,6 +40,6 @@ public class IMCmdCoopLeave extends AnnotatedCommand {
 
 	@Override
 	public void executeCore(SuperiorSkyblock superiorSkyblock, CommandSender sender, Player player, String[] args) {
-		islandService.leaveCoop(player, args[2]);
+		islandService.leaveCoop(player, args[1]);
 	}
 }
